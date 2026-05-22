@@ -7,6 +7,9 @@ const illustrationAssets = {
   question: '/assets/love-question-accent.png',
   feedback: '/assets/love-feedback-peek.png',
   result: '/assets/love-result-accent.png',
+  phoneReply: '/assets/love-phone-reply.png',
+  detective: '/assets/love-detective.png',
+  survivalGuide: '/assets/love-survival-guide.png',
 };
 
 function cx(...parts) {
@@ -151,10 +154,17 @@ function QuestionAccent() {
   return (
     <div className="pointer-events-none absolute right-3 top-3 h-28 w-28 opacity-95">
       <img
+        src={illustrationAssets.phoneReply}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full select-none object-contain"
+        draggable="false"
+      />
+      <img
         src={illustrationAssets.question}
         alt=""
         aria-hidden="true"
-        className="h-full w-full select-none object-contain"
+        className="absolute -left-1 bottom-[-2px] h-11 w-11 select-none object-contain rotate-[-10deg] drop-shadow-[0_8px_18px_rgba(91,72,56,0.12)]"
         draggable="false"
       />
     </div>
@@ -165,10 +175,17 @@ function FeedbackPeek() {
   return (
     <div className="pointer-events-none absolute right-4 top-4 h-24 w-24 opacity-95">
       <img
+        src={illustrationAssets.detective}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full select-none object-contain"
+        draggable="false"
+      />
+      <img
         src={illustrationAssets.feedback}
         alt=""
         aria-hidden="true"
-        className="h-full w-full select-none object-contain"
+        className="absolute -left-1 bottom-[-6px] h-10 w-10 select-none object-contain rotate-[-8deg] drop-shadow-[0_8px_18px_rgba(91,72,56,0.12)]"
         draggable="false"
       />
     </div>
@@ -355,21 +372,31 @@ function App() {
                 className="space-y-4"
               >
                 <SectionCard>
-                  <div className="mb-4 flex items-center justify-between">
-                    <h2 className="text-xl font-bold">求生规则</h2>
-                    <button
-                      type="button"
-                      onClick={hideRules}
-                      className="rounded-full bg-white/80 px-3 py-1 text-sm text-[var(--muted)]"
-                    >
-                      关闭
-                    </button>
+                  <div className="mb-4 flex items-start justify-between gap-4">
+                    <div className="space-y-1">
+                      <h2 className="text-xl font-bold">求生规则</h2>
+                      <p className="text-sm text-[var(--muted)]">一眼看懂，直接开玩。</p>
+                    </div>
+                    <img
+                      src={illustrationAssets.survivalGuide}
+                      alt=""
+                      aria-hidden="true"
+                      className="h-20 w-20 shrink-0 select-none object-contain"
+                      draggable="false"
+                    />
                   </div>
                   <div className="space-y-3 text-[15px] leading-7 text-[var(--text)]">
                     <p>每局随机 10 道恋爱高危场景题。</p>
                     <p>每题有 3 种求生姿势：稳住、拆题、整活。</p>
                     <p>最后系统会根据你的选择，生成一份恋爱求生报告。</p>
                   </div>
+                  <button
+                    type="button"
+                    onClick={hideRules}
+                    className="mt-4 rounded-full bg-white/80 px-3 py-1 text-sm text-[var(--muted)]"
+                  >
+                    关闭
+                  </button>
                 </SectionCard>
                 <button
                   type="button"
