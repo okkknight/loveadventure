@@ -2,6 +2,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useMemo } from 'react';
 import { STYLE_ORDER, useGameStore } from './store/gameStore';
 
+const stickerSheet = '/assets/love-survival-stickers.png';
+
 function cx(...parts) {
   return parts.filter(Boolean).join(' ');
 }
@@ -41,9 +43,15 @@ function BubbleButton({ active, children, onClick, variant = 'default', disabled
     default: active
       ? 'border-[#e99a79] bg-[#fff3ec] text-[#8b452e] shadow-bubble'
       : 'border-[rgba(89,70,55,0.10)] bg-white/85 text-[var(--text)] hover:border-[#ddb7a0] hover:bg-white',
-    muted: active
-      ? 'border-[#e3bb66] bg-[#fff8e3] text-[#7c5b12] shadow-bubble'
-      : 'border-[rgba(89,70,55,0.10)] bg-white/80 text-[var(--text)] hover:border-[#e8d09b] hover:bg-white',
+    stable: active
+      ? 'border-[#e3a191] bg-[#fff4ee] text-[#8b452e] shadow-bubble'
+      : 'border-[rgba(89,70,55,0.10)] bg-[#fffdfa] text-[var(--text)] hover:border-[#deb2a0] hover:bg-white',
+    analytic: active
+      ? 'border-[#97b7d8] bg-[#f3f8fe] text-[#345d83] shadow-bubble'
+      : 'border-[rgba(89,70,55,0.10)] bg-[#fcfdff] text-[var(--text)] hover:border-[#bdd0e7] hover:bg-white',
+    playful: active
+      ? 'border-[#e8bb64] bg-[#fff8e3] text-[#7c5b12] shadow-bubble'
+      : 'border-[rgba(89,70,55,0.10)] bg-[#fffdf4] text-[var(--text)] hover:border-[#ead7a2] hover:bg-white',
   };
 
   return (
@@ -63,6 +71,20 @@ function getPromptText(prompt) {
   return match?.[1] ?? prompt;
 }
 
+function StickerArt({ position = 'center', fit = 'contain', className = '', alt = '' }) {
+  return (
+    <div className={className}>
+      <img
+        src={stickerSheet}
+        alt={alt}
+        className={cx('h-full w-full select-none', fit === 'cover' ? 'object-cover' : 'object-contain')}
+        style={{ objectPosition: position }}
+        draggable="false"
+      />
+    </div>
+  );
+}
+
 function App() {
   const phase = useGameStore((s) => s.phase);
   const questions = useGameStore((s) => s.questions);
@@ -80,6 +102,8 @@ function App() {
   const shareResult = useGameStore((s) => s.shareResult);
 
   const currentQuestion = questions[questionIndex];
+  const currentStep = questionIndex + 1;
+  const progressPercent = Math.min((currentStep / 10) * 100, 100);
 
   const total = useMemo(
     () => STYLE_ORDER.reduce((sum, style) => sum + (counts[style] ?? 0), 0),
@@ -128,6 +152,15 @@ function App() {
                     <p className="max-w-[28ch] text-[15px] leading-7 text-[var(--muted)]">
                       你以为你很会说话。直到恋爱高危场景真的出现。
                     </p>
+                  </div>
+
+                  <div className="mt-5 overflow-hidden rounded-[28px] border border-[rgba(89,70,55,0.08)] bg-[#fffaf5] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+                    <StickerArt
+                      alt="恋爱求生宝典素材"
+                      className="h-[240px] w-full"
+                      fit="contain"
+                      position="center"
+                    />
                   </div>
 
                   <div className="mt-6 flex flex-wrap gap-2">
@@ -211,9 +244,22 @@ function App() {
                 exit={{ opacity: 0, y: -10 }}
                 className="space-y-4"
               >
-                <SectionCard className="space-y-4">
-                  <div className="rounded-[26px] bg-[#fff7ef] px-5 py-6 text-center">
-                    <p className="text-[1.55rem] font-black leading-[1.35] tracking-[-0.03em] text-[var(--text)]">
+                <div className="flex items-center justify-between px-1">
+                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-white/70 shadow-[inset_0_1px_2px_rgba(89,70,55,0.06)]">
+                    <div
+                      className="h-full rounded-full bg-[linear-gradient(90deg,var(--accent),#f39b73)] transition-all duration-300"
+                      style={{ width: `${progressPercent}%` }}
+                    />
+                  </div>
+                  <div className="ml-3 h-8 w-8 rounded-full border border-[rgba(89,70,55,0.08)] bg-white/80 shadow-[0_8px_18px_rgba(91,72,56,0.08)]" />
+                </div>
+
+                <SectionCard className="relative space-y-4 overflow-hidden">
+                  <div className="absolute right-3 top-3 h-20 w-20 opacity-85">
+                    <StickerArt alt="" className="h-full w-full" fit="cover" position="77% 24%" />
+                  </div>
+                  <div className="rounded-[26px] bg-[#fff7ef] px-5 py-6 pr-24 text-left">
+                    <p className="text-[1.52rem] font-black leading-[1.38] tracking-[-0.03em] text-[var(--text)]">
                       “{getPromptText(currentQuestion.prompt)}”
                     </p>
                   </div>
@@ -226,8 +272,20 @@ function App() {
                       active={false}
                       onClick={() => chooseOption(index)}
                       disabled={phase !== 'question'}
+                      variant={
+                        option.style === '稳住型'
+                          ? 'stable'
+                          : option.style === '拆题型'
+                            ? 'analytic'
+                            : 'playful'
+                      }
                     >
-                      <div className="leading-8">{option.text}</div>
+                      <div className="flex items-start gap-3">
+                        <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/85 text-[14px] shadow-[0_8px_20px_rgba(91,72,56,0.08)]">
+                          {option.style === '稳住型' ? '♡' : option.style === '拆题型' ? '◎' : '✦'}
+                        </span>
+                        <span className="flex-1 leading-8">{option.text}</span>
+                      </div>
                     </BubbleButton>
                   ))}
                 </div>
@@ -236,27 +294,38 @@ function App() {
             )}
 
             {phase === 'feedback' && feedback && currentQuestion && (
-              <motion.div
-                key={`fb-${currentQuestion.id}`}
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="space-y-4"
-              >
-                <SectionCard className="space-y-4">
-                  <div className="space-y-4 rounded-[24px] bg-white/85 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
-                    <p className="text-[15px] leading-8 text-[#8a5137]">{feedback.verdict}</p>
-                  </div>
-                </SectionCard>
-
-                <button
-                  type="button"
-                  onClick={nextQuestion}
-                  className="w-full rounded-[22px] bg-[linear-gradient(135deg,#3d342d,#625245)] px-5 py-4 text-[17px] font-semibold text-white shadow-bubble transition hover:translate-y-[-1px] active:scale-[0.99]"
+              <>
+                <div className="fixed inset-0 z-30 bg-[rgba(31,22,18,0.28)] backdrop-blur-[2px]" />
+                <motion.div
+                  key={`fb-${currentQuestion.id}`}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  className="fixed inset-x-0 bottom-0 z-40 mx-auto w-full max-w-[430px] px-3 pb-3"
                 >
-                  {questionIndex === questions.length - 1 ? '生成求生报告' : '下一题看看还能不能活'}
-                </button>
-              </motion.div>
+                  <div className="overflow-hidden rounded-t-[34px] border border-[rgba(89,70,55,0.08)] bg-[var(--surface-strong)] shadow-[0_-10px_30px_rgba(51,37,28,0.12)] backdrop-blur-md">
+                    <div className="mx-auto mt-3 h-1.5 w-12 rounded-full bg-[rgba(89,70,55,0.16)]" />
+                    <div className="relative px-5 py-5">
+                      <div className="absolute right-3 top-3 h-[72px] w-[72px]">
+                        <StickerArt alt="" className="h-full w-full" fit="cover" position="28% 74%" />
+                      </div>
+                      <div className="space-y-4 rounded-[24px] bg-white/88 p-4 pr-20 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
+                        <p className="text-[15px] leading-8 text-[#8a5137]">{feedback.verdict}</p>
+                      </div>
+                    </div>
+
+                    <div className="px-5 pb-5">
+                      <button
+                        type="button"
+                        onClick={nextQuestion}
+                        className="w-full rounded-[22px] bg-[linear-gradient(135deg,#3d342d,#625245)] px-5 py-4 text-[17px] font-semibold text-white shadow-bubble transition hover:translate-y-[-1px] active:scale-[0.99]"
+                      >
+                        {questionIndex === questions.length - 1 ? '生成求生报告' : '下一题看看还能不能活'}
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              </>
             )}
 
             {phase === 'result' && result && (
@@ -268,14 +337,19 @@ function App() {
                 className="space-y-4"
               >
                 <SectionCard className="space-y-5">
-                  <div className="space-y-2">
-                    <div className="text-sm font-medium text-[var(--muted)]">恋爱求生宝典</div>
-                    <h2 className="text-[1.9rem] font-black leading-[1.04] tracking-[-0.04em]">
-                      {result.title}
-                    </h2>
-                    <p className="text-[15px] leading-7 text-[var(--muted)]">
-                      你完成了这局恋爱高危场景测试。
-                    </p>
+                  <div className="relative overflow-hidden rounded-[28px] bg-[#fff8f1] p-5">
+                    <div className="absolute right-2 top-1 h-20 w-20 rotate-[8deg] opacity-95">
+                      <StickerArt alt="" className="h-full w-full" fit="cover" position="78% 78%" />
+                    </div>
+                    <div className="space-y-2 pr-16">
+                      <div className="text-sm font-medium text-[var(--muted)]">恋爱求生宝典</div>
+                      <h2 className="text-[1.9rem] font-black leading-[1.04] tracking-[-0.04em]">
+                        {result.title}
+                      </h2>
+                      <p className="text-[15px] leading-7 text-[var(--muted)]">
+                        你完成了这局恋爱高危场景测试。
+                      </p>
+                    </div>
                   </div>
 
                   <div className="space-y-3 rounded-[24px] bg-[#fff8f1] p-4">
