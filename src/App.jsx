@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { STYLE_ORDER, useGameStore } from './store/gameStore';
 
 function cx(...parts) {
@@ -58,12 +58,16 @@ function BubbleButton({ active, children, onClick, variant = 'default', disabled
   );
 }
 
+function getPromptText(prompt) {
+  const match = prompt.match(/[“"]([^”"]+)[”"]/);
+  return match?.[1] ?? prompt;
+}
+
 function App() {
   const phase = useGameStore((s) => s.phase);
   const questions = useGameStore((s) => s.questions);
   const questionIndex = useGameStore((s) => s.questionIndex);
   const counts = useGameStore((s) => s.counts);
-  const selectedOptionIndex = useGameStore((s) => s.selectedOptionIndex);
   const feedback = useGameStore((s) => s.feedback);
   const result = useGameStore((s) => s.result);
   const shareStatus = useGameStore((s) => s.shareStatus);
@@ -208,21 +212,10 @@ function App() {
                 className="space-y-4"
               >
                 <SectionCard className="space-y-4">
-                  <div className="flex items-center justify-between gap-3 text-[13px] text-[var(--muted)]">
-                    <span>
-                      第 {questionIndex + 1} / 10 题
-                    </span>
-                    <span>{currentQuestion.category}</span>
-                  </div>
-
-                  <div className="space-y-3">
-                    <h2 className="text-[1.6rem] font-black leading-tight tracking-[-0.03em]">
-                      {currentQuestion.title}
-                    </h2>
-                    <div className="rounded-[24px] bg-[#fff7ef] px-4 py-4 text-[15px] leading-7">
-                      <div className="mb-2 text-sm font-semibold text-[#9b5637]">她说：</div>
-                      <p>{currentQuestion.prompt}</p>
-                    </div>
+                  <div className="rounded-[26px] bg-[#fff7ef] px-5 py-6 text-center">
+                    <p className="text-[1.55rem] font-black leading-[1.35] tracking-[-0.03em] text-[var(--text)]">
+                      “{getPromptText(currentQuestion.prompt)}”
+                    </p>
                   </div>
                 </SectionCard>
 
@@ -234,23 +227,11 @@ function App() {
                       onClick={() => chooseOption(index)}
                       disabled={phase !== 'question'}
                     >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0">
-                          <div className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
-                            {option.style}
-                          </div>
-                          <div className="leading-7">{option.text}</div>
-                        </div>
-                        <span className="mt-1 rounded-full bg-white/80 px-2 py-1 text-xs text-[var(--muted)]">选</span>
-                      </div>
+                      <div className="leading-8">{option.text}</div>
                     </BubbleButton>
                   ))}
                 </div>
 
-                <div className="flex items-center justify-between gap-3 text-xs text-[var(--muted)]">
-                  <span>选择后会先看到系统吐槽，再点下一题</span>
-                  <span>{total} / 10</span>
-                </div>
               </motion.div>
             )}
 
@@ -263,22 +244,10 @@ function App() {
                 className="space-y-4"
               >
                 <SectionCard className="space-y-4">
-                  <div className="flex items-center justify-between text-sm text-[var(--muted)]">
-                    <span>系统旁白</span>
-                    <span>{currentQuestion.category}</span>
-                  </div>
                   <div className="space-y-4 rounded-[24px] bg-white/85 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
-                    <div className="inline-flex rounded-full bg-[#fff0e8] px-3 py-1 text-xs font-semibold text-[#a04d2d]">
-                      {feedback.style}回答
-                    </div>
-                    <p className="text-[15px] leading-7">{feedback.observation}</p>
-                    <p className="text-[15px] leading-7 text-[#8a5137]">{feedback.verdict}</p>
+                    <p className="text-[15px] leading-8">{feedback.observation}</p>
+                    <p className="text-[15px] leading-8 text-[#8a5137]">{feedback.verdict}</p>
                   </div>
-                  {selectedOptionIndex !== null ? (
-                    <div className="rounded-[24px] border border-[rgba(89,70,55,0.08)] bg-[#fff8f3] px-4 py-4 text-[14px] leading-7 text-[var(--muted)]">
-                      你刚刚选的是第 {selectedOptionIndex + 1} 个回答。系统已经记下这次操作，继续往下看看还能不能活。
-                    </div>
-                  ) : null}
                 </SectionCard>
 
                 <button
