@@ -2,7 +2,12 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useMemo } from 'react';
 import { STYLE_ORDER, useGameStore } from './store/gameStore';
 
-const stickerSheet = '/assets/love-survival-stickers.png';
+const illustrationAssets = {
+  home: '/assets/love-home-hero.png',
+  question: '/assets/love-question-accent.png',
+  feedback: '/assets/love-feedback-peek.png',
+  result: '/assets/love-result-accent.png',
+};
 
 function cx(...parts) {
   return parts.filter(Boolean).join(' ');
@@ -27,11 +32,159 @@ function SectionCard({ children, className = '' }) {
   return (
     <div
       className={cx(
-        'rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-soft backdrop-blur-sm',
+        'rounded-[30px] border border-[rgba(89,70,55,0.09)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(255,248,241,0.88))] p-5 shadow-soft backdrop-blur-sm',
         className,
       )}
     >
       {children}
+    </div>
+  );
+}
+
+function Sparkle({ className = '', tone = '#f2b23d' }) {
+  return (
+    <svg viewBox="0 0 48 48" className={className} aria-hidden="true">
+      <path
+        d="M24 4l3.4 11.6L39 19l-11.6 3.4L24 34l-3.4-11.6L9 19l11.6-3.4L24 4Z"
+        fill={tone}
+        fillOpacity="0.92"
+      />
+    </svg>
+  );
+}
+
+function FloatingPlane({ className = '' }) {
+  return (
+    <svg viewBox="0 0 120 84" className={className} aria-hidden="true">
+      <path d="M10 43L109 10 79 74 60 54 10 43Z" fill="#fffaf5" stroke="#d8bfae" strokeWidth="2.3" />
+      <path d="M25 40L72 52" fill="none" stroke="#f09c73" strokeWidth="2.6" strokeLinecap="round" />
+      <path d="M10 43L60 54" fill="none" stroke="#d8bfae" strokeWidth="2.3" strokeLinejoin="round" />
+      <path d="M56 57L79 74" fill="none" stroke="#d8bfae" strokeWidth="2.3" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function HeartNote({ className = '' }) {
+  return (
+    <svg viewBox="0 0 140 120" className={className} aria-hidden="true">
+      <path
+        d="M24 10h82l18 18v74a12 12 0 0 1-12 12H24a12 12 0 0 1-12-12V22a12 12 0 0 1 12-12Z"
+        fill="#fff8ef"
+        stroke="#e6d3c4"
+        strokeWidth="2.4"
+      />
+      <path d="M106 10v18h18" fill="#fff1e2" stroke="#e6d3c4" strokeWidth="2.4" />
+      <path
+        d="M69 76c-17-11-29-21-29-34 0-9 7-16 16-16 6 0 11 3 14 8 3-5 8-8 14-8 9 0 16 7 16 16 0 13-12 23-29 34-2 1-4 1-6 0Z"
+        fill="#f48b66"
+        fillOpacity="0.15"
+        stroke="#f48b66"
+        strokeWidth="2.4"
+      />
+      <path d="M24 90h52" stroke="#ebd7c8" strokeWidth="2.4" strokeLinecap="round" />
+      <path d="M24 100h38" stroke="#ebd7c8" strokeWidth="2.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function CrownMark({ className = '' }) {
+  return (
+    <svg viewBox="0 0 120 92" className={className} aria-hidden="true">
+      <path
+        d="M14 58 24 24l22 22 14-26 14 26 22-22 10 34-92 0Z"
+        fill="#fff5db"
+        stroke="#8d7b60"
+        strokeWidth="2.6"
+        strokeLinejoin="round"
+      />
+      <path d="M16 58h88" stroke="#8d7b60" strokeWidth="2.6" strokeLinecap="round" />
+      <circle cx="24" cy="24" r="4" fill="#f2b23d" stroke="#8d7b60" strokeWidth="2" />
+      <circle cx="60" cy="20" r="4" fill="#f2b23d" stroke="#8d7b60" strokeWidth="2" />
+      <circle cx="96" cy="24" r="4" fill="#f2b23d" stroke="#8d7b60" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function CameraMascot({ className = '' }) {
+  return (
+    <svg viewBox="0 0 140 120" className={className} aria-hidden="true">
+      <path
+        d="M36 35c6-8 15-12 26-12h16c12 0 22 5 28 14 7 10 8 24 4 39-5 17-19 29-36 29H58c-17 0-30-13-35-29-5-16-4-31 13-41Z"
+        fill="#fffaf5"
+        stroke="#a49382"
+        strokeWidth="2.4"
+      />
+      <circle cx="63" cy="58" r="8" fill="#2f241d" />
+      <circle cx="89" cy="58" r="8" fill="#2f241d" />
+      <path d="M62 77c4 4 12 4 16 0" fill="none" stroke="#2f241d" strokeWidth="2.4" strokeLinecap="round" />
+      <path d="M47 54h-14l-6 8 6 8h14" fill="#fff2e2" stroke="#a49382" strokeWidth="2.2" />
+      <path d="M50 51h16" stroke="#a49382" strokeWidth="2.4" strokeLinecap="round" />
+      <path
+        d="M33 97c8 8 21 12 37 12 18 0 31-4 39-12"
+        fill="none"
+        stroke="#d6c0ae"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+      />
+      <circle cx="98" cy="90" r="7" fill="#f6dfcf" />
+      <circle cx="44" cy="26" r="7" fill="#f6dfcf" />
+    </svg>
+  );
+}
+
+function HomeIllustration() {
+  return (
+    <div className="relative overflow-hidden rounded-[30px] border border-[rgba(89,70,55,0.08)] bg-[linear-gradient(180deg,#fffaf5_0%,#fff3e9_100%)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(242,178,61,0.18),transparent_28%),radial-gradient(circle_at_78%_24%,rgba(231,119,79,0.15),transparent_24%),radial-gradient(circle_at_56%_76%,rgba(109,180,139,0.08),transparent_26%)]" />
+      <img
+        src={illustrationAssets.home}
+        alt=""
+        aria-hidden="true"
+        className="relative h-[260px] w-full select-none object-contain"
+        draggable="false"
+      />
+    </div>
+  );
+}
+
+function QuestionAccent() {
+  return (
+    <div className="pointer-events-none absolute right-3 top-3 h-28 w-28 opacity-95">
+      <img
+        src={illustrationAssets.question}
+        alt=""
+        aria-hidden="true"
+        className="h-full w-full select-none object-contain"
+        draggable="false"
+      />
+    </div>
+  );
+}
+
+function FeedbackPeek() {
+  return (
+    <div className="pointer-events-none absolute right-4 top-4 h-24 w-24 opacity-95">
+      <img
+        src={illustrationAssets.feedback}
+        alt=""
+        aria-hidden="true"
+        className="h-full w-full select-none object-contain"
+        draggable="false"
+      />
+    </div>
+  );
+}
+
+function ResultAccent() {
+  return (
+    <div className="pointer-events-none absolute right-3 top-2 h-24 w-24 opacity-95">
+      <img
+        src={illustrationAssets.result}
+        alt=""
+        aria-hidden="true"
+        className="h-full w-full select-none object-contain"
+        draggable="false"
+      />
     </div>
   );
 }
@@ -71,18 +224,10 @@ function getPromptText(prompt) {
   return match?.[1] ?? prompt;
 }
 
-function StickerArt({ position = 'center', fit = 'contain', className = '', alt = '' }) {
-  return (
-    <div className={className}>
-      <img
-        src={stickerSheet}
-        alt={alt}
-        className={cx('h-full w-full select-none', fit === 'cover' ? 'object-cover' : 'object-contain')}
-        style={{ objectPosition: position }}
-        draggable="false"
-      />
-    </div>
-  );
+function formatDisplayTitle(title) {
+  if (!title || title.length <= 5) return title;
+  const splitIndex = Math.ceil(title.length / 2);
+  return `${title.slice(0, splitIndex)}\n${title.slice(splitIndex)}`;
 }
 
 function App() {
@@ -122,10 +267,14 @@ function App() {
   }, [counts, total]);
 
   return (
-    <div className="min-h-screen px-4 py-6 text-[var(--text)] sm:px-6">
+    <div className="relative min-h-screen overflow-hidden px-4 py-6 text-[var(--text)] sm:px-6">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_8%,rgba(231,119,79,0.18),transparent_26%),radial-gradient(circle_at_84%_10%,rgba(242,178,61,0.14),transparent_22%),radial-gradient(circle_at_50%_92%,rgba(109,180,139,0.08),transparent_24%)]" />
+      <div className="pointer-events-none absolute inset-0 opacity-[0.16] [background-image:linear-gradient(rgba(89,70,55,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(89,70,55,0.03)_1px,transparent_1px)] [background-size:26px_26px]" />
       <div className="mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-[430px] items-center">
         <div className="relative w-full">
           <div className="pointer-events-none absolute inset-x-4 -top-2 h-24 rounded-full bg-[radial-gradient(circle,rgba(231,119,79,0.16)_0%,transparent_70%)] blur-3xl" />
+          <div className="pointer-events-none absolute -left-8 top-44 h-32 w-32 rounded-full bg-[radial-gradient(circle,rgba(242,178,61,0.12)_0%,transparent_68%)] blur-3xl" />
+          <div className="pointer-events-none absolute -right-10 bottom-12 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(109,180,139,0.08)_0%,transparent_68%)] blur-3xl" />
 
           <AnimatePresence mode="wait">
             {phase === 'home' && (
@@ -142,25 +291,21 @@ function App() {
                     <span>手机端网页小游戏</span>
                     <span>轻量图一乐版</span>
                   </div>
-                  <div className="space-y-3">
-                    <div className="inline-flex rounded-full bg-[#fff0e8] px-3 py-1 text-xs font-semibold tracking-[0.14em] text-[#a04d2d]">
+                  <div className="space-y-4 text-center">
+                    <div className="mx-auto inline-flex rounded-full bg-[#fff0e8] px-3 py-1 text-xs font-semibold tracking-[0.14em] text-[#a04d2d]">
                       恋爱高危场景测试
                     </div>
-                    <h1 className="text-[2.15rem] font-black leading-[1.02] tracking-[-0.04em]">
-                      恋爱求生宝典
+                    <h1 className="text-[3.05rem] font-black leading-[0.95] tracking-[-0.06em]">
+                      <span className="block text-[var(--text)]">恋爱</span>
+                      <span className="block text-[var(--accent)]">求生宝典</span>
                     </h1>
-                    <p className="max-w-[28ch] text-[15px] leading-7 text-[var(--muted)]">
+                    <p className="mx-auto max-w-[24ch] text-[15px] leading-7 text-[var(--muted)]">
                       你以为你很会说话。直到恋爱高危场景真的出现。
                     </p>
                   </div>
 
-                  <div className="mt-5 overflow-hidden rounded-[28px] border border-[rgba(89,70,55,0.08)] bg-[#fffaf5] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
-                    <StickerArt
-                      alt="恋爱求生宝典素材"
-                      className="h-[240px] w-full"
-                      fit="contain"
-                      position="center"
-                    />
+                  <div className="mt-5">
+                    <HomeIllustration />
                   </div>
 
                   <div className="mt-6 flex flex-wrap gap-2">
@@ -251,14 +396,14 @@ function App() {
                       style={{ width: `${progressPercent}%` }}
                     />
                   </div>
-                  <div className="ml-3 h-8 w-8 rounded-full border border-[rgba(89,70,55,0.08)] bg-white/80 shadow-[0_8px_18px_rgba(91,72,56,0.08)]" />
+                  <div className="ml-3 flex h-8 w-8 items-center justify-center rounded-full border border-[rgba(89,70,55,0.08)] bg-white/80 shadow-[0_8px_18px_rgba(91,72,56,0.08)]">
+                    <Sparkle className="h-4 w-4" tone="#f2b23d" />
+                  </div>
                 </div>
 
                 <SectionCard className="relative space-y-4 overflow-hidden">
-                  <div className="absolute right-3 top-3 h-20 w-20 opacity-85">
-                    <StickerArt alt="" className="h-full w-full" fit="cover" position="77% 24%" />
-                  </div>
-                  <div className="rounded-[26px] bg-[#fff7ef] px-5 py-6 pr-24 text-left">
+                  <QuestionAccent />
+                  <div className="rounded-[26px] bg-[#fff7ef] px-5 py-6 pr-24 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
                     <p className="text-[1.52rem] font-black leading-[1.38] tracking-[-0.03em] text-[var(--text)]">
                       “{getPromptText(currentQuestion.prompt)}”
                     </p>
@@ -306,10 +451,8 @@ function App() {
                   <div className="overflow-hidden rounded-t-[34px] border border-[rgba(89,70,55,0.08)] bg-[var(--surface-strong)] shadow-[0_-10px_30px_rgba(51,37,28,0.12)] backdrop-blur-md">
                     <div className="mx-auto mt-3 h-1.5 w-12 rounded-full bg-[rgba(89,70,55,0.16)]" />
                     <div className="relative px-5 py-5">
-                      <div className="absolute right-3 top-3 h-[72px] w-[72px]">
-                        <StickerArt alt="" className="h-full w-full" fit="cover" position="28% 74%" />
-                      </div>
-                      <div className="space-y-4 rounded-[24px] bg-white/88 p-4 pr-20 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
+                      <div className="relative space-y-4 overflow-hidden rounded-[24px] bg-white/88 p-4 pr-20 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
+                        <FeedbackPeek />
                         <p className="text-[15px] leading-8 text-[#8a5137]">{feedback.verdict}</p>
                       </div>
                     </div>
@@ -336,28 +479,41 @@ function App() {
                 exit={{ opacity: 0, y: -8 }}
                 className="space-y-4"
               >
-                <SectionCard className="space-y-5">
-                  <div className="relative overflow-hidden rounded-[28px] bg-[#fff8f1] p-5">
-                    <div className="absolute right-2 top-1 h-20 w-20 rotate-[8deg] opacity-95">
-                      <StickerArt alt="" className="h-full w-full" fit="cover" position="78% 78%" />
-                    </div>
-                    <div className="space-y-2 pr-16">
+                <SectionCard className="space-y-4">
+                  <div className="relative overflow-hidden rounded-[28px] bg-[#fff8f1] p-4">
+                    <ResultAccent />
+                    <div className="space-y-2 pr-20">
                       <div className="text-sm font-medium text-[var(--muted)]">恋爱求生宝典</div>
-                      <h2 className="text-[1.9rem] font-black leading-[1.04] tracking-[-0.04em]">
-                        {result.title}
+                      <h2 className="whitespace-pre-line text-[1.76rem] font-black leading-[1.04] tracking-[-0.04em]">
+                        {formatDisplayTitle(result.title)}
                       </h2>
-                      <p className="text-[15px] leading-7 text-[var(--muted)]">
+                      <p className="max-w-[18ch] text-[14px] leading-6 text-[var(--muted)]">
                         你完成了这局恋爱高危场景测试。
                       </p>
                     </div>
                   </div>
 
-                  <div className="space-y-3 rounded-[24px] bg-[#fff8f1] p-4">
+                  <div className="space-y-3 rounded-[24px] bg-[#fff8f1] p-3.5">
                     <div className="text-sm font-semibold text-[#a04d2d]">求生姿势分布</div>
                     {STYLE_ORDER.map((style) => (
                       <div key={style} className="space-y-1">
                         <div className="flex items-center justify-between text-[14px]">
-                          <span>{style}</span>
+                          <span className="flex items-center gap-2">
+                            <span
+                              className={cx(
+                                'flex h-7 w-7 items-center justify-center rounded-full border text-[12px] shadow-[0_8px_18px_rgba(91,72,56,0.06)]',
+                                style === '稳住型' &&
+                                  'border-[#cfe0d8] bg-[#eff8f2] text-[#4f8d69]',
+                                style === '拆题型' &&
+                                  'border-[#c9d9eb] bg-[#f2f7fc] text-[#5c83aa]',
+                                style === '整活型' &&
+                                  'border-[#f1d7a0] bg-[#fff7df] text-[#a77a19]',
+                              )}
+                            >
+                              {style === '稳住型' ? '◡' : style === '拆题型' ? '⌁' : '✦'}
+                            </span>
+                            <span>{style}</span>
+                          </span>
                           <span className="font-semibold">{percentages[style]}%</span>
                         </div>
                         <div className="h-2 overflow-hidden rounded-full bg-white/80">
@@ -378,11 +534,11 @@ function App() {
                   <div className="space-y-3">
                     <div>
                       <div className="mb-2 text-sm font-semibold text-[var(--muted)]">系统评价</div>
-                      <p className="text-[15px] leading-7">{result.summary}</p>
+                      <p className="text-[14px] leading-6">{result.summary}</p>
                     </div>
                     <div>
                       <div className="mb-2 text-sm font-semibold text-[var(--muted)]">求生建议</div>
-                      <p className="text-[15px] leading-7 text-[#8a5137]">{result.advice}</p>
+                      <p className="text-[14px] leading-6 text-[#8a5137]">{result.advice}</p>
                     </div>
                   </div>
                 </SectionCard>
