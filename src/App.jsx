@@ -245,7 +245,6 @@ function App() {
               >
                 <SectionCard className="space-y-4">
                   <div className="space-y-4 rounded-[24px] bg-white/85 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
-                    <p className="text-[15px] leading-8">{feedback.observation}</p>
                     <p className="text-[15px] leading-8 text-[#8a5137]">{feedback.verdict}</p>
                   </div>
                 </SectionCard>
