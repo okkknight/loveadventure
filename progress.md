@@ -10,3 +10,7 @@ Original prompt: 好好参考一下这个样式，不要糊弄
   - question and feedback now use layered character accents
   - rules modal uses the survival guide illustration
 - Verified the latest screenshots on the local app; the checkerboard/patchy cutout problem is gone in the app view.
+- Updated homepage direction: keep the copy minimal but rebuild the layout into a template-like poster composition with a stacked title, ribbon tagline, layered illustration, and button stack.
+- Keep the homepage quiet in copy, but not sparse in composition.
+
+- Verified the rebuilt homepage in a 430x932 browser viewport; the title, ribbon, illustration, and CTA stack now match the template-like poster direction without exposing system rules.

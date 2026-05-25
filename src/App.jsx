@@ -2,33 +2,19 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useMemo } from 'react';
 import { STYLE_ORDER, useGameStore } from './store/gameStore';
 
+const assetUrl = (file) => `${import.meta.env.BASE_URL}assets/${file}`;
+
 const illustrationAssets = {
-  home: '/assets/love-home-hero.png',
-  question: '/assets/love-question-accent.png',
-  feedback: '/assets/love-feedback-peek.png',
-  result: '/assets/love-result-accent.png',
-  phoneReply: '/assets/love-phone-reply.png',
-  detective: '/assets/love-detective.png',
-  survivalGuide: '/assets/love-survival-guide.png',
+  home: assetUrl('love-home-hero.png'),
+  question: assetUrl('love-question-accent.png'),
+  feedback: assetUrl('love-feedback-peek.png'),
+  phoneReply: assetUrl('love-phone-reply.png'),
+  detective: assetUrl('love-detective.png'),
+  survivalGuide: assetUrl('love-survival-guide.png'),
 };
 
 function cx(...parts) {
   return parts.filter(Boolean).join(' ');
-}
-
-function StatPill({ label, value, tone = 'neutral' }) {
-  const tones = {
-    neutral: 'bg-white/75 text-[#3b2e26]',
-    accent: 'bg-[#fde6da] text-[#9f4728]',
-    warm: 'bg-[#fff1d7] text-[#9a6f17]',
-    safe: 'bg-[#e4f2ea] text-[#347056]',
-  };
-  return (
-    <div className={cx('inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium', tones[tone])}>
-      <span>{label}</span>
-      <span className="opacity-80">{value}</span>
-    </div>
-  );
 }
 
 function SectionCard({ children, className = '' }) {
@@ -53,6 +39,155 @@ function Sparkle({ className = '', tone = '#f2b23d' }) {
         fillOpacity="0.92"
       />
     </svg>
+  );
+}
+
+function QuoteMark({ className = '' }) {
+  return (
+    <svg viewBox="0 0 64 44" className={className} aria-hidden="true">
+      <path
+        d="M18.1 4.2c-7.4 2.4-12.3 8-12.3 16.8 0 5 2 9.1 5.6 11.8 2.8 2 6 2.8 8.9 2.8 4.5 0 8.7-1.9 11.3-5.2 2.2-2.8 3.3-6.5 3.3-10.6 0-1.5-.1-3-.4-4.4h-10.1c0 2.1-.3 3.8-1.1 5.1-.7 1.3-2 2.1-3.9 2.1-2.5 0-4.1-1.8-4.1-4.8 0-3.7 2.2-6.9 6.7-9.2L18.1 4.2Z"
+        fill="currentColor"
+        fillOpacity="0.34"
+      />
+      <path
+        d="M46.1 4.2c-7.4 2.4-12.3 8-12.3 16.8 0 5 2 9.1 5.6 11.8 2.8 2 6 2.8 8.9 2.8 4.5 0 8.7-1.9 11.3-5.2 2.2-2.8 3.3-6.5 3.3-10.6 0-1.5-.1-3-.4-4.4H38.1c0 2.1-.3 3.8-1.1 5.1-.7 1.3-2 2.1-3.9 2.1-2.5 0-4.1-1.8-4.1-4.8 0-3.7 2.2-6.9 6.7-9.2L46.1 4.2Z"
+        transform="translate(-8 0)"
+        fill="currentColor"
+        fillOpacity="0.23"
+      />
+    </svg>
+  );
+}
+
+function ChevronLeft({ className = '' }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <path
+        d="M15 5 8 12l7 7"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function ChevronRight({ className = '' }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <path
+        d="M9 5 16 12l-7 7"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function QuestionHeader({ currentStep }) {
+  return (
+    <div className="grid grid-cols-[2rem_1fr_2rem] items-center gap-2 px-1 pt-1">
+      <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[rgba(89,70,55,0.08)] bg-white/72 shadow-[0_8px_18px_rgba(91,72,56,0.06)]">
+        <ChevronLeft className="h-4 w-4 text-[var(--muted)]" />
+      </div>
+      <div className="text-center text-[1.08rem] font-medium tracking-[-0.02em] text-[var(--text)]">
+        第 {currentStep}/10 题
+      </div>
+      <div className="flex justify-end">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[rgba(89,70,55,0.08)] bg-white/72 shadow-[0_8px_18px_rgba(91,72,56,0.06)]">
+          <Sparkle className="h-4 w-4" tone="#e7774f" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function QuestionCard({ prompt, className = '' }) {
+  return (
+    <div
+      className={cx(
+        'question-card relative overflow-hidden rounded-[30px] border border-[#ecdccd] bg-[linear-gradient(180deg,#fffdf8_0%,#fff8f1_100%)] p-5 shadow-[0_16px_42px_rgba(89,70,55,0.08)]',
+        className,
+      )}
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_14%,rgba(242,178,61,0.07),transparent_24%),radial-gradient(circle_at_84%_18%,rgba(231,119,79,0.07),transparent_24%),radial-gradient(circle_at_56%_88%,rgba(109,180,139,0.05),transparent_20%)]" />
+      <div className="pointer-events-none absolute left-4 top-4 text-[#cdbeb1]">
+        <QuoteMark className="h-8 w-8" />
+      </div>
+      <div className="relative z-10 min-h-[176px] pr-24 pt-7 pb-5 sm:pr-28">
+        <p className="question-copy max-w-[20ch] whitespace-pre-line text-[1.25rem] font-extrabold leading-[1.62] tracking-[-0.04em] text-[var(--text)] sm:max-w-[22ch] sm:text-[1.32rem]">
+          {prompt}
+        </p>
+      </div>
+      <div className="pointer-events-none absolute bottom-[-2px] right-[-2px] h-28 w-28">
+        <img
+          src={illustrationAssets.phoneReply}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full select-none object-contain opacity-95"
+          draggable="false"
+        />
+      </div>
+    </div>
+  );
+}
+
+function FeedbackCard({ observation, verdict, className = '' }) {
+  return (
+    <div
+      className={cx(
+        'relative overflow-hidden rounded-[30px] border border-[#ecdccd] bg-[linear-gradient(180deg,#fffdf8_0%,#fff7ef_100%)] p-5 shadow-[0_16px_42px_rgba(89,70,55,0.08)]',
+        className,
+      )}
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_14%,rgba(242,178,61,0.07),transparent_24%),radial-gradient(circle_at_84%_18%,rgba(231,119,79,0.07),transparent_24%),radial-gradient(circle_at_56%_88%,rgba(109,180,139,0.05),transparent_20%)]" />
+      <div className="pointer-events-none absolute left-4 top-4 text-[#cdbeb1]">
+        <QuoteMark className="h-8 w-8" />
+      </div>
+      <div className="relative z-10 min-h-[128px] pr-24 pt-7 pb-5 sm:pr-28">
+        <div className="max-w-[18.5ch] space-y-2 sm:max-w-[20ch]">
+          <p className="text-[0.92rem] leading-[1.55] tracking-[-0.02em] text-[var(--muted)]">
+            {observation}
+          </p>
+          <p className="text-[1.04rem] font-semibold leading-[1.68] tracking-[-0.03em] text-[var(--text)] sm:text-[1.1rem]">
+            {verdict}
+          </p>
+        </div>
+      </div>
+      <div className="pointer-events-none absolute bottom-[-2px] right-[-2px] h-28 w-28">
+        <img
+          src={illustrationAssets.detective}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full select-none object-contain opacity-95"
+          draggable="false"
+        />
+      </div>
+    </div>
+  );
+}
+
+function BubbleTail({ side = 'left', variant = 'stable' }) {
+  const sideClass = side === 'left' ? '-left-1.5' : '-right-1.5';
+  const borderTone =
+    variant === 'stable' ? 'rgba(228,161,145,0.65)' : variant === 'analytic' ? 'rgba(149,184,219,0.65)' : 'rgba(232,187,100,0.65)';
+  return (
+    <div
+      aria-hidden="true"
+      className={cx(
+        'absolute bottom-3 h-4 w-4 rotate-45 rounded-[4px] border bg-inherit shadow-[0_8px_14px_rgba(91,72,56,0.06)]',
+        sideClass,
+      )}
+      style={{
+        borderColor: borderTone,
+      }}
+    />
   );
 }
 
@@ -108,6 +243,70 @@ function CrownMark({ className = '' }) {
   );
 }
 
+function ResultSeal({ className = '' }) {
+  return (
+    <svg viewBox="0 0 96 96" className={className} aria-hidden="true">
+      <circle cx="48" cy="48" r="38" fill="#fff9f2" stroke="#e6d3c4" strokeWidth="2.4" />
+      <circle cx="35" cy="39" r="3.5" fill="#544335" />
+      <circle cx="61" cy="39" r="3.5" fill="#544335" />
+      <path d="M35 55c5 6 21 6 26 0" fill="none" stroke="#544335" strokeWidth="2.6" strokeLinecap="round" />
+      <path d="M27 29c5-4 11-6 21-6" fill="none" stroke="#f1b59f" strokeWidth="2.4" strokeLinecap="round" />
+      <path d="M69 29c-5-4-11-6-21-6" fill="none" stroke="#f1b59f" strokeWidth="2.4" strokeLinecap="round" />
+      <circle cx="29" cy="49" r="2.3" fill="#f48b66" fillOpacity="0.68" />
+      <circle cx="67" cy="49" r="2.3" fill="#f48b66" fillOpacity="0.68" />
+    </svg>
+  );
+}
+
+function CompassIcon({ className = '' }) {
+  return (
+    <svg viewBox="0 0 96 96" className={className} aria-hidden="true">
+      <circle cx="48" cy="48" r="36" fill="#fff6e7" stroke="#d2b78c" strokeWidth="2.4" />
+      <circle cx="48" cy="48" r="24" fill="#fffaf4" stroke="#bda37a" strokeWidth="2.2" />
+      <path d="M48 29 58 48 48 67 38 48 48 29Z" fill="#f2b23d" stroke="#8d7b60" strokeWidth="2.2" strokeLinejoin="round" />
+      <path d="M48 21v8" stroke="#8d7b60" strokeWidth="2.2" strokeLinecap="round" />
+      <path d="M48 67v8" stroke="#8d7b60" strokeWidth="2.2" strokeLinecap="round" />
+      <path d="M29 48h8" stroke="#8d7b60" strokeWidth="2.2" strokeLinecap="round" />
+      <path d="M59 48h8" stroke="#8d7b60" strokeWidth="2.2" strokeLinecap="round" />
+      <circle cx="48" cy="48" r="3.5" fill="#8d7b60" />
+    </svg>
+  );
+}
+
+function StyleFaceIcon({ style, className = '' }) {
+  if (style === '稳住型') {
+    return (
+      <svg viewBox="0 0 40 40" className={className} aria-hidden="true">
+        <circle cx="20" cy="20" r="18" fill="#fff5ef" stroke="#ef9e88" strokeWidth="1.6" />
+        <path d="M11 17c2.2 0 3.4-1.1 4.5-2.5" fill="none" stroke="#5b4638" strokeWidth="1.9" strokeLinecap="round" />
+        <path d="M24.5 14.5c1.1 1.4 2.4 2.5 4.5 2.5" fill="none" stroke="#5b4638" strokeWidth="1.9" strokeLinecap="round" />
+        <path d="M14 25c2.2 2.3 9.8 2.3 12 0" fill="none" stroke="#5b4638" strokeWidth="1.8" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  if (style === '拆题型') {
+    return (
+      <svg viewBox="0 0 40 40" className={className} aria-hidden="true">
+        <circle cx="20" cy="20" r="18" fill="#ecf4fb" stroke="#91b6d7" strokeWidth="1.6" />
+        <path d="M12 15c2-2 4.5-2.6 7.8-2.6" fill="none" stroke="#365d83" strokeWidth="2" strokeLinecap="round" />
+        <path d="M20.2 12.4c3.2 0 5.5.6 7.8 2.6" fill="none" stroke="#365d83" strokeWidth="2" strokeLinecap="round" />
+        <path d="M14.2 25.2c2.2-1.3 4.4-1.9 5.8-1.9s3.6.6 5.8 1.9" fill="none" stroke="#365d83" strokeWidth="1.8" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 40 40" className={className} aria-hidden="true">
+      <circle cx="20" cy="20" r="18" fill="#fff2cf" stroke="#e8b55a" strokeWidth="1.6" />
+      <path d="M10 14 15 14 18 19 22 12 27 19 30 14" fill="none" stroke="#5f4a1a" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+      <path d="M13 24c2.2 2.1 4.9 3.1 7 3.1s4.8-1 7-3.1" fill="none" stroke="#5f4a1a" strokeWidth="1.8" strokeLinecap="round" />
+      <circle cx="16" cy="24" r="1.6" fill="#5f4a1a" />
+      <circle cx="24" cy="24" r="1.6" fill="#5f4a1a" />
+    </svg>
+  );
+}
+
 function CameraMascot({ className = '' }) {
   return (
     <svg viewBox="0 0 140 120" className={className} aria-hidden="true">
@@ -137,91 +336,60 @@ function CameraMascot({ className = '' }) {
 
 function HomeIllustration() {
   return (
-    <div className="relative overflow-hidden rounded-[30px] border border-[rgba(89,70,55,0.08)] bg-[linear-gradient(180deg,#fffaf5_0%,#fff3e9_100%)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(242,178,61,0.18),transparent_28%),radial-gradient(circle_at_78%_24%,rgba(231,119,79,0.15),transparent_24%),radial-gradient(circle_at_56%_76%,rgba(109,180,139,0.08),transparent_26%)]" />
-      <img
-        src={illustrationAssets.home}
-        alt=""
-        aria-hidden="true"
-        className="relative h-[260px] w-full select-none object-contain"
-        draggable="false"
-      />
-    </div>
-  );
-}
-
-function QuestionAccent() {
-  return (
-    <div className="pointer-events-none absolute right-3 top-3 h-28 w-28 opacity-95">
-      <img
-        src={illustrationAssets.phoneReply}
-        alt=""
-        aria-hidden="true"
-        className="absolute inset-0 h-full w-full select-none object-contain"
-        draggable="false"
-      />
-      <img
-        src={illustrationAssets.question}
-        alt=""
-        aria-hidden="true"
-        className="absolute -left-1 bottom-[-2px] h-11 w-11 select-none object-contain rotate-[-10deg] drop-shadow-[0_8px_18px_rgba(91,72,56,0.12)]"
-        draggable="false"
-      />
-    </div>
-  );
-}
-
-function FeedbackPeek() {
-  return (
-    <div className="pointer-events-none absolute right-4 top-4 h-24 w-24 opacity-95">
-      <img
-        src={illustrationAssets.detective}
-        alt=""
-        aria-hidden="true"
-        className="absolute inset-0 h-full w-full select-none object-contain"
-        draggable="false"
-      />
-      <img
-        src={illustrationAssets.feedback}
-        alt=""
-        aria-hidden="true"
-        className="absolute -left-1 bottom-[-6px] h-10 w-10 select-none object-contain rotate-[-8deg] drop-shadow-[0_8px_18px_rgba(91,72,56,0.12)]"
-        draggable="false"
-      />
-    </div>
-  );
-}
-
-function ResultAccent() {
-  return (
-    <div className="pointer-events-none absolute right-3 top-2 h-24 w-24 opacity-95">
-      <img
-        src={illustrationAssets.result}
-        alt=""
-        aria-hidden="true"
-        className="h-full w-full select-none object-contain"
-        draggable="false"
-      />
+    <div className="relative overflow-hidden rounded-[36px] border border-[#ead8c8] bg-[linear-gradient(180deg,rgba(255,250,243,0.98),rgba(255,244,235,0.98))] px-4 pb-5 pt-5 shadow-[0_18px_42px_rgba(122,92,65,0.09),inset_0_1px_0_rgba(255,255,255,0.9)]">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_16%,rgba(242,178,61,0.16),transparent_22%),radial-gradient(circle_at_84%_18%,rgba(231,119,79,0.14),transparent_20%),radial-gradient(circle_at_56%_76%,rgba(109,180,139,0.08),transparent_24%)]" />
+      <div className="pointer-events-none absolute left-4 top-4 opacity-90">
+        <Sparkle className="h-5 w-5" tone="#f2b23d" />
+      </div>
+      <div className="pointer-events-none absolute right-5 top-5 rotate-[8deg] opacity-90">
+        <div className="rounded-full border border-dashed border-[rgba(135,111,89,0.34)] bg-white/60 px-2 py-2 shadow-[0_10px_18px_rgba(91,72,56,0.06)]">
+          <HeartNote className="h-12 w-12" />
+        </div>
+      </div>
+      <div className="pointer-events-none absolute left-4 bottom-8 rotate-[-12deg] opacity-72">
+        <FloatingPlane className="h-8 w-8" />
+      </div>
+      <div className="pointer-events-none absolute right-7 bottom-10 rotate-[12deg] opacity-75">
+        <Sparkle className="h-4 w-4" tone="#f09c73" />
+      </div>
+      <div className="relative">
+        <img
+          src={illustrationAssets.home}
+          alt=""
+          aria-hidden="true"
+          className="relative mx-auto h-[282px] w-full select-none object-contain drop-shadow-[0_28px_30px_rgba(99,75,56,0.09)]"
+          draggable="false"
+        />
+        <div className="relative mx-auto -mt-1 w-[84%] rounded-[20px] border border-[#ebd9c9] bg-[rgba(255,251,245,0.94)] px-4 py-3 text-center shadow-[0_12px_24px_rgba(91,72,56,0.07)]">
+          <div className="pointer-events-none absolute -left-2 top-3 h-4 w-4 rotate-[-12deg] rounded-[4px] bg-[#f4d29a] shadow-[0_2px_6px_rgba(91,72,56,0.08)]" />
+          <div className="pointer-events-none absolute -right-2 top-4 h-4 w-4 rotate-[12deg] rounded-[4px] bg-[#f4d29a] shadow-[0_2px_6px_rgba(91,72,56,0.08)]" />
+          <p className="text-[14px] leading-7 text-[var(--text)]">
+            仅供娱乐
+            <br />
+            务必当真
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
 
 function BubbleButton({ active, children, onClick, variant = 'default', disabled }) {
   const base =
-    'w-full rounded-[24px] border px-4 py-4 text-left text-[15px] leading-relaxed transition duration-200 active:scale-[0.99]';
+    'relative w-full overflow-hidden rounded-[28px] border px-4 py-[18px] text-left transition duration-200 active:scale-[0.992]';
   const variants = {
     default: active
-      ? 'border-[#e99a79] bg-[#fff3ec] text-[#8b452e] shadow-bubble'
-      : 'border-[rgba(89,70,55,0.10)] bg-white/85 text-[var(--text)] hover:border-[#ddb7a0] hover:bg-white',
+      ? 'border-[#e99a79] bg-[#fff3ec] text-[#8b452e] shadow-[0_14px_28px_rgba(231,119,79,0.12)]'
+      : 'border-[rgba(89,70,55,0.10)] bg-white/90 text-[var(--text)] hover:border-[#ddb7a0] hover:bg-white hover:shadow-[0_12px_26px_rgba(91,72,56,0.08)]',
     stable: active
-      ? 'border-[#e3a191] bg-[#fff4ee] text-[#8b452e] shadow-bubble'
-      : 'border-[rgba(89,70,55,0.10)] bg-[#fffdfa] text-[var(--text)] hover:border-[#deb2a0] hover:bg-white',
+      ? 'border-[#e3a191] bg-[#fff4ee] text-[#8b452e] shadow-[0_14px_28px_rgba(231,119,79,0.12)]'
+      : 'border-[#e8cab8] bg-[linear-gradient(180deg,#fffaf7_0%,#fff4ef_100%)] text-[var(--text)] hover:border-[#deb2a0] hover:bg-white hover:shadow-[0_12px_26px_rgba(91,72,56,0.08)]',
     analytic: active
-      ? 'border-[#97b7d8] bg-[#f3f8fe] text-[#345d83] shadow-bubble'
-      : 'border-[rgba(89,70,55,0.10)] bg-[#fcfdff] text-[var(--text)] hover:border-[#bdd0e7] hover:bg-white',
+      ? 'border-[#97b7d8] bg-[#f3f8fe] text-[#345d83] shadow-[0_14px_28px_rgba(140,175,210,0.14)]'
+      : 'border-[#c8d9ea] bg-[linear-gradient(180deg,#fbfdff_0%,#f4f8fd_100%)] text-[var(--text)] hover:border-[#bdd0e7] hover:bg-white hover:shadow-[0_12px_26px_rgba(91,72,56,0.08)]',
     playful: active
-      ? 'border-[#e8bb64] bg-[#fff8e3] text-[#7c5b12] shadow-bubble'
-      : 'border-[rgba(89,70,55,0.10)] bg-[#fffdf4] text-[var(--text)] hover:border-[#ead7a2] hover:bg-white',
+      ? 'border-[#e8bb64] bg-[#fff8e3] text-[#7c5b12] shadow-[0_14px_28px_rgba(232,187,100,0.13)]'
+      : 'border-[#ead7a2] bg-[linear-gradient(180deg,#fffdf5_0%,#fff9e9_100%)] text-[var(--text)] hover:border-[#ead7a2] hover:bg-white hover:shadow-[0_12px_26px_rgba(91,72,56,0.08)]',
   };
 
   return (
@@ -231,6 +399,7 @@ function BubbleButton({ active, children, onClick, variant = 'default', disabled
       disabled={disabled}
       className={cx(base, variants[variant], disabled && 'cursor-not-allowed opacity-70')}
     >
+      <BubbleTail side={variant === 'analytic' || variant === 'playful' ? 'right' : 'left'} variant={variant} />
       {children}
     </button>
   );
@@ -241,10 +410,20 @@ function getPromptText(prompt) {
   return match?.[1] ?? prompt;
 }
 
-function formatDisplayTitle(title) {
-  if (!title || title.length <= 5) return title;
-  const splitIndex = Math.ceil(title.length / 2);
-  return `${title.slice(0, splitIndex)}\n${title.slice(splitIndex)}`;
+function BookIcon({ className = '' }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <path
+        d="M5 4.8c0-.97.79-1.8 1.76-1.8H19v16.4H6.76A1.76 1.76 0 0 1 5 17.64V4.8Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+      <path d="M8 6.8h7.2M8 10h7.2M8 13.2h4.8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M5 4.8A1.8 1.8 0 0 1 6.8 3H19v16.4H6.8A1.8 1.8 0 0 1 5 17.6" fill="none" stroke="currentColor" strokeWidth="1.8" />
+    </svg>
+  );
 }
 
 function App() {
@@ -301,63 +480,72 @@ function App() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.28 }}
-                className="space-y-4"
+                className="relative overflow-hidden rounded-[42px] border border-[#eadbc9] bg-[linear-gradient(180deg,rgba(255,251,245,0.92),rgba(255,245,235,0.98))] px-4 py-5 shadow-[0_18px_50px_rgba(120,90,60,0.1)]"
               >
-                <SectionCard className="overflow-hidden">
-                  <div className="mb-4 flex items-center justify-between text-sm text-[var(--muted)]">
-                    <span>手机端网页小游戏</span>
-                    <span>轻量图一乐版</span>
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_14%,rgba(231,119,79,0.14),transparent_18%),radial-gradient(circle_at_82%_15%,rgba(242,178,61,0.14),transparent_16%),radial-gradient(circle_at_18%_84%,rgba(109,180,139,0.08),transparent_20%),radial-gradient(circle_at_84%_86%,rgba(242,178,61,0.08),transparent_18%)]" />
+                <div className="pointer-events-none absolute left-2 top-3 -rotate-[10deg] opacity-82">
+                  <FloatingPlane className="h-10 w-10" />
+                </div>
+                <div className="pointer-events-none absolute left-8 top-24 rotate-[-8deg] opacity-55">
+                  <Sparkle className="h-4 w-4" tone="#f2b23d" />
+                </div>
+                <div className="pointer-events-none absolute right-5 top-8 rotate-[12deg] opacity-78">
+                  <Sparkle className="h-5 w-5" tone="#f2b23d" />
+                </div>
+                <div className="pointer-events-none absolute right-8 bottom-32 rotate-[8deg] opacity-78">
+                  <div className="rounded-full border border-dashed border-[rgba(145,122,97,0.32)] bg-white/48 px-2 py-2 shadow-[0_8px_16px_rgba(91,72,56,0.05)]">
+                    <HeartNote className="h-10 w-10" />
                   </div>
-                  <div className="space-y-4 text-center">
-                    <div className="mx-auto inline-flex rounded-full bg-[#fff0e8] px-3 py-1 text-xs font-semibold tracking-[0.14em] text-[#a04d2d]">
-                      恋爱高危场景测试
-                    </div>
-                    <h1 className="text-[3.05rem] font-black leading-[0.95] tracking-[-0.06em]">
-                      <span className="block text-[var(--text)]">恋爱</span>
-                      <span className="block text-[var(--accent)]">求生宝典</span>
+                </div>
+                <div className="pointer-events-none absolute left-5 bottom-6 opacity-65">
+                  <svg viewBox="0 0 90 28" className="h-8 w-20" aria-hidden="true">
+                    <path
+                      d="M8 18c7-9 16-9 23 0s16 9 23 0 16-9 23 0"
+                      fill="none"
+                      stroke="#d9bca8"
+                      strokeWidth="2.1"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </div>
+
+                <div className="relative flex flex-col items-center text-center">
+                  <div className="space-y-2 pt-1">
+                    <h1
+                      className="text-[clamp(3.4rem,16vw,4.65rem)] font-black leading-[0.84] tracking-[-0.09em]"
+                      style={{
+                        fontFamily: 'ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", system-ui, sans-serif',
+                      }}
+                    >
+                      <span className="block text-[var(--text)] drop-shadow-[0_1px_0_rgba(255,255,255,0.24)]">恋爱</span>
+                      <span className="block text-[#ef6f4d] drop-shadow-[0_1px_0_rgba(255,255,255,0.18)]">求生宝典</span>
                     </h1>
-                    <p className="mx-auto max-w-[24ch] text-[15px] leading-7 text-[var(--muted)]">
-                      你以为你很会说话。直到恋爱高危场景真的出现。
-                    </p>
                   </div>
 
-                  <div className="mt-5">
+                  <div className="mt-4 inline-flex max-w-[92%] items-center justify-center rounded-full border border-[#dbc5a9] bg-[linear-gradient(180deg,#f3e4c8,#ead7b4)] px-5 py-2.5 text-[14px] font-medium text-[#6f5434] shadow-[0_10px_20px_rgba(130,103,72,0.08)] rotate-[-1.5deg]">
+                    在爱情这座迷宫里，活着才有糖吃。
+                  </div>
+
+                  <div className="mt-4 w-full">
                     <HomeIllustration />
                   </div>
 
-                  <div className="mt-6 flex flex-wrap gap-2">
-                    <StatPill label="10题" value="一局结束" tone="accent" />
-                    <StatPill label="3种风格" value="稳住 / 拆题 / 整活" tone="warm" />
-                    <StatPill label="目标" value="玩完笑一下" tone="safe" />
-                  </div>
-
-                  <div className="mt-6 space-y-3">
+                  <div className="mt-4 flex w-full flex-col gap-3">
                     <button
                       type="button"
                       onClick={startGame}
-                      className="w-full rounded-[22px] bg-[linear-gradient(135deg,var(--accent),#ef8d57)] px-5 py-4 text-[17px] font-semibold text-white shadow-bubble transition hover:translate-y-[-1px] active:scale-[0.99]"
+                      className="w-full rounded-[28px] bg-[linear-gradient(135deg,#f06f4f,#ea5f43)] px-5 py-[18px] text-[18px] font-extrabold tracking-[0.02em] text-white shadow-[0_18px_28px_rgba(231,119,79,0.26),inset_0_1px_0_rgba(255,255,255,0.24)] transition hover:translate-y-[-1px] active:scale-[0.99]"
                     >
                       开始求生
                     </button>
                     <button
                       type="button"
                       onClick={showRules}
-                      className="w-full rounded-[22px] border border-[rgba(89,70,55,0.12)] bg-white/70 px-5 py-4 text-[15px] font-medium text-[var(--text)] transition hover:bg-white"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-[26px] border border-[rgba(89,70,55,0.12)] bg-[rgba(255,255,255,0.72)] px-5 py-3.5 text-[15px] font-semibold text-[var(--text)] shadow-[0_10px_20px_rgba(91,72,56,0.05)] transition hover:bg-white"
                     >
-                      查看求生规则
+                      <BookIcon className="h-5 w-5 text-[var(--muted)]" />
+                      游戏规则
                     </button>
-                  </div>
-                </SectionCard>
-
-                <div className="grid grid-cols-3 gap-2 text-[12px] text-[var(--muted)]">
-                  <div className="rounded-[18px] border border-[var(--border)] bg-white/65 p-3 leading-5 shadow-[0_6px_20px_rgba(91,72,56,0.05)]">
-                    不严肃
-                  </div>
-                  <div className="rounded-[18px] border border-[var(--border)] bg-white/65 p-3 leading-5 shadow-[0_6px_20px_rgba(91,72,56,0.05)]">
-                    不复杂
-                  </div>
-                  <div className="rounded-[18px] border border-[var(--border)] bg-white/65 p-3 leading-5 shadow-[0_6px_20px_rgba(91,72,56,0.05)]">
-                    只图一乐
                   </div>
                 </div>
               </motion.div>
@@ -374,7 +562,7 @@ function App() {
                 <SectionCard>
                   <div className="mb-4 flex items-start justify-between gap-4">
                     <div className="space-y-1">
-                      <h2 className="text-xl font-bold">求生规则</h2>
+                      <h2 className="text-xl font-bold">怎么玩</h2>
                       <p className="text-sm text-[var(--muted)]">一眼看懂，直接开玩。</p>
                     </div>
                     <img
@@ -386,9 +574,9 @@ function App() {
                     />
                   </div>
                   <div className="space-y-3 text-[15px] leading-7 text-[var(--text)]">
-                    <p>每局随机 10 道恋爱高危场景题。</p>
-                    <p>每题有 3 种求生姿势：稳住、拆题、整活。</p>
-                    <p>最后系统会根据你的选择，生成一份恋爱求生报告。</p>
+                    <p>每局随机 10 道题，选你觉得更顺手的回答。</p>
+                    <p>结束后会生成一份轻松的恋爱报告。</p>
+                    <p>不用太认真，图一乐就行。</p>
                   </div>
                   <button
                     type="button"
@@ -416,28 +604,20 @@ function App() {
                 exit={{ opacity: 0, y: -10 }}
                 className="space-y-4"
               >
-                <div className="flex items-center justify-between px-1">
-                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-white/70 shadow-[inset_0_1px_2px_rgba(89,70,55,0.06)]">
+                <QuestionHeader currentStep={currentStep} />
+
+                <div className="px-1">
+                  <div className="h-2.5 overflow-hidden rounded-full bg-white/78 shadow-[inset_0_1px_2px_rgba(89,70,55,0.05)]">
                     <div
-                      className="h-full rounded-full bg-[linear-gradient(90deg,var(--accent),#f39b73)] transition-all duration-300"
+                      className="h-full rounded-full bg-[linear-gradient(90deg,#ef8a63_0%,#f6a17b_100%)] transition-all duration-300"
                       style={{ width: `${progressPercent}%` }}
                     />
                   </div>
-                  <div className="ml-3 flex h-8 w-8 items-center justify-center rounded-full border border-[rgba(89,70,55,0.08)] bg-white/80 shadow-[0_8px_18px_rgba(91,72,56,0.08)]">
-                    <Sparkle className="h-4 w-4" tone="#f2b23d" />
-                  </div>
                 </div>
 
-                <SectionCard className="relative space-y-4 overflow-hidden">
-                  <QuestionAccent />
-                  <div className="rounded-[26px] bg-[#fff7ef] px-5 py-6 pr-24 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
-                    <p className="text-[1.52rem] font-black leading-[1.38] tracking-[-0.03em] text-[var(--text)]">
-                      “{getPromptText(currentQuestion.prompt)}”
-                    </p>
-                  </div>
-                </SectionCard>
+                <QuestionCard prompt={getPromptText(currentQuestion.prompt)} />
 
-                <div className="space-y-3">
+                <div className="space-y-3 pt-1">
                   {currentQuestion.options.map((option, index) => (
                     <BubbleButton
                       key={`${currentQuestion.id}-${option.style}-${index}`}
@@ -451,23 +631,35 @@ function App() {
                             ? 'analytic'
                             : 'playful'
                       }
-                    >
-                      <div className="flex items-start gap-3">
-                        <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/85 text-[14px] shadow-[0_8px_20px_rgba(91,72,56,0.08)]">
-                          {option.style === '稳住型' ? '♡' : option.style === '拆题型' ? '◎' : '✦'}
+                      >
+                      <div className="relative z-10 flex items-center gap-3 pr-7">
+                        <span
+                          className={cx(
+                            'flex h-11 w-11 shrink-0 items-center justify-center rounded-full border text-[15px] shadow-[0_10px_20px_rgba(91,72,56,0.08)]',
+                            option.style === '稳住型' &&
+                              'border-[#ebb8a8] bg-[#fff6f1] text-[#d4704d]',
+                            option.style === '拆题型' &&
+                              'border-[#bed2e5] bg-[#f6fbff] text-[#6b8db2]',
+                            option.style === '整活型' &&
+                              'border-[#eed08a] bg-[#fff8e8] text-[#b78a1f]',
+                          )}
+                        >
+                          {option.style === '稳住型' ? '◡' : option.style === '拆题型' ? '⌁' : '✦'}
                         </span>
-                        <span className="flex-1 leading-8">{option.text}</span>
+                        <span className="flex-1 text-[14px] leading-7 text-[rgba(46,36,29,0.86)]">
+                          {option.text}
+                        </span>
+                        <ChevronRight className="h-5 w-5 shrink-0 text-[rgba(231,119,79,0.84)]" />
                       </div>
                     </BubbleButton>
                   ))}
                 </div>
-
               </motion.div>
             )}
 
             {phase === 'feedback' && feedback && currentQuestion && (
               <>
-                <div className="fixed inset-0 z-30 bg-[rgba(31,22,18,0.28)] backdrop-blur-[2px]" />
+                <div className="fixed inset-0 z-30 bg-[rgba(31,22,18,0.22)] backdrop-blur-[2px]" />
                 <motion.div
                   key={`fb-${currentQuestion.id}`}
                   initial={{ opacity: 0, y: 30 }}
@@ -475,20 +667,17 @@ function App() {
                   exit={{ opacity: 0, y: 20 }}
                   className="fixed inset-x-0 bottom-0 z-40 mx-auto w-full max-w-[430px] px-3 pb-3"
                 >
-                  <div className="overflow-hidden rounded-t-[34px] border border-[rgba(89,70,55,0.08)] bg-[var(--surface-strong)] shadow-[0_-10px_30px_rgba(51,37,28,0.12)] backdrop-blur-md">
+                  <div className="overflow-hidden rounded-t-[36px] border border-[rgba(89,70,55,0.08)] bg-[linear-gradient(180deg,rgba(255,252,247,0.96),rgba(255,246,237,0.98))] shadow-[0_-12px_32px_rgba(51,37,28,0.10)] backdrop-blur-md">
                     <div className="mx-auto mt-3 h-1.5 w-12 rounded-full bg-[rgba(89,70,55,0.16)]" />
-                    <div className="relative px-5 py-5">
-                      <div className="relative space-y-4 overflow-hidden rounded-[24px] bg-white/88 p-4 pr-20 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
-                        <FeedbackPeek />
-                        <p className="text-[15px] leading-8 text-[#8a5137]">{feedback.verdict}</p>
-                      </div>
+                    <div className="px-4 pb-4 pt-4">
+                      <FeedbackCard observation={feedback.observation} verdict={feedback.verdict} />
                     </div>
 
-                    <div className="px-5 pb-5">
+                    <div className="px-4 pb-4">
                       <button
                         type="button"
                         onClick={nextQuestion}
-                        className="w-full rounded-[22px] bg-[linear-gradient(135deg,#3d342d,#625245)] px-5 py-4 text-[17px] font-semibold text-white shadow-bubble transition hover:translate-y-[-1px] active:scale-[0.99]"
+                        className="w-full rounded-[24px] bg-[linear-gradient(135deg,#ef7e57,#ea6948)] px-5 py-4 text-[16px] font-semibold text-white shadow-[0_18px_30px_rgba(231,119,79,0.24)] transition hover:translate-y-[-1px] active:scale-[0.99]"
                       >
                         {questionIndex === questions.length - 1 ? '生成求生报告' : '下一题看看还能不能活'}
                       </button>
@@ -506,85 +695,125 @@ function App() {
                 exit={{ opacity: 0, y: -8 }}
                 className="space-y-4"
               >
-                <SectionCard className="space-y-4">
-                  <div className="relative overflow-hidden rounded-[28px] bg-[#fff8f1] p-4">
-                    <ResultAccent />
-                    <div className="space-y-2 pr-20">
-                      <div className="text-sm font-medium text-[var(--muted)]">恋爱求生宝典</div>
-                      <h2 className="whitespace-pre-line text-[1.76rem] font-black leading-[1.04] tracking-[-0.04em]">
-                        {formatDisplayTitle(result.title)}
-                      </h2>
-                      <p className="max-w-[18ch] text-[14px] leading-6 text-[var(--muted)]">
-                        你完成了这局恋爱高危场景测试。
-                      </p>
-                    </div>
+                <div className="relative overflow-hidden rounded-[30px] border border-[#ecdccd] bg-[linear-gradient(180deg,#fffdf8_0%,#fff8f1_100%)] p-5 shadow-[0_16px_42px_rgba(89,70,55,0.08)]">
+                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_14%,rgba(242,178,61,0.07),transparent_24%),radial-gradient(circle_at_84%_18%,rgba(231,119,79,0.07),transparent_24%),radial-gradient(circle_at_56%_88%,rgba(109,180,139,0.05),transparent_20%)]" />
+                  <div className="pointer-events-none absolute right-4 top-4 text-[#cdbeb1]">
+                    <QuoteMark className="h-8 w-8" />
                   </div>
 
-                  <div className="space-y-3 rounded-[24px] bg-[#fff8f1] p-3.5">
-                    <div className="text-sm font-semibold text-[#a04d2d]">求生姿势分布</div>
-                    {STYLE_ORDER.map((style) => (
-                      <div key={style} className="space-y-1">
-                        <div className="flex items-center justify-between text-[14px]">
-                          <span className="flex items-center gap-2">
-                            <span
-                              className={cx(
-                                'flex h-7 w-7 items-center justify-center rounded-full border text-[12px] shadow-[0_8px_18px_rgba(91,72,56,0.06)]',
-                                style === '稳住型' &&
-                                  'border-[#cfe0d8] bg-[#eff8f2] text-[#4f8d69]',
-                                style === '拆题型' &&
-                                  'border-[#c9d9eb] bg-[#f2f7fc] text-[#5c83aa]',
-                                style === '整活型' &&
-                                  'border-[#f1d7a0] bg-[#fff7df] text-[#a77a19]',
-                              )}
-                            >
-                              {style === '稳住型' ? '◡' : style === '拆题型' ? '⌁' : '✦'}
-                            </span>
-                            <span>{style}</span>
-                          </span>
-                          <span className="font-semibold">{percentages[style]}%</span>
-                        </div>
-                        <div className="h-2 overflow-hidden rounded-full bg-white/80">
-                          <div
-                            className={cx(
-                              'h-full rounded-full',
-                              style === '稳住型' && 'bg-[#6db48b]',
-                              style === '拆题型' && 'bg-[#f2b23d]',
-                              style === '整活型' && 'bg-[#e7774f]',
-                            )}
-                            style={{ width: `${Math.max(percentages[style], 6)}%` }}
-                          />
+                  <div className="relative space-y-4">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2 text-[var(--muted)]">
+                        <Sparkle className="h-4 w-4 flex-none" tone="#f2b23d" />
+                        <span className="text-[0.92rem] font-medium tracking-[0.06em] uppercase">RESULT</span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 text-center">
+                      <div className="text-[1.05rem] font-black leading-tight tracking-[-0.04em] text-[var(--text)] sm:text-[1.18rem]">
+                        你的恋爱求生风格是
+                      </div>
+                      <div className="mx-auto inline-flex max-w-full items-center justify-center rounded-[24px] bg-[linear-gradient(180deg,rgba(255,248,239,0.95),rgba(255,240,228,0.98))] px-5 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+                        <h2 className="text-balance text-[1.45rem] font-black leading-[1.08] tracking-[-0.05em] text-[#f26e4b] sm:text-[1.62rem]">
+                          「{result.title}」
+                        </h2>
+                      </div>
+                    </div>
+
+                    <div className="rounded-[28px] border border-[#ecdccd] bg-[rgba(255,255,255,0.88)] p-4 shadow-[0_10px_26px_rgba(96,70,50,0.05)]">
+                      <div className="mb-2.5 flex items-end justify-between gap-3">
+                        <div className="text-[0.92rem] font-black tracking-[-0.03em] text-[var(--text)]">
+                          风格分布
                         </div>
                       </div>
-                    ))}
-                  </div>
 
-                  <div className="space-y-3">
-                    <div>
-                      <div className="mb-2 text-sm font-semibold text-[var(--muted)]">系统评价</div>
-                      <p className="text-[14px] leading-6">{result.summary}</p>
+                      <div className="space-y-3">
+                        {STYLE_ORDER.map((style) => (
+                          <div key={style} className="space-y-2">
+                            <div className="flex items-center gap-2.5">
+                              <div
+                                className={cx(
+                                  'flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full border shadow-[0_8px_18px_rgba(91,72,56,0.06)]',
+                                  style === '稳住型' && 'border-[#efb4a4] bg-[#fff0eb]',
+                                  style === '拆题型' && 'border-[#b8d1e7] bg-[#eef5fb]',
+                                  style === '整活型' && 'border-[#f0cf8d] bg-[#fff5de]',
+                                )}
+                              >
+                                <StyleFaceIcon style={style} className="h-[30px] w-[30px]" />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center justify-between gap-3">
+                                  <span className="text-[0.92rem] font-semibold text-[var(--text)]">{style}</span>
+                                  <span className="text-[1rem] font-black tracking-[-0.04em] text-[var(--text)]">
+                                    {percentages[style]}%
+                                  </span>
+                                </div>
+                                <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-[#f4ece6]">
+                                  <div
+                                    className={cx(
+                                      'h-full rounded-full',
+                                      style === '稳住型' && 'bg-[#ef7d61]',
+                                      style === '拆题型' && 'bg-[#9dbfdf]',
+                                      style === '整活型' && 'bg-[#f2bf62]',
+                                    )}
+                                    style={{ width: `${Math.max(percentages[style], 6)}%` }}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <div>
-                      <div className="mb-2 text-sm font-semibold text-[var(--muted)]">求生建议</div>
-                      <p className="text-[14px] leading-6 text-[#8a5137]">{result.advice}</p>
+
+                    <div className="relative overflow-hidden rounded-[28px] border border-[#ecdccd] bg-[rgba(255,255,255,0.88)] p-4 shadow-[0_10px_26px_rgba(96,70,50,0.05)]">
+                      <div className="absolute right-3 top-3">
+                        <ResultSeal className="h-11 w-11 drop-shadow-[0_8px_20px_rgba(91,72,56,0.08)]" />
+                      </div>
+                      <div className="pr-16">
+                        <div className="text-[0.92rem] font-black tracking-[-0.03em] text-[var(--text)]">
+                          系统评价
+                        </div>
+                        <p className="mt-2 max-w-[22ch] text-[0.92rem] leading-[1.58] text-[var(--text)] sm:max-w-[24ch]">
+                          {result.summary}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="relative overflow-hidden rounded-[28px] border border-[#ecdccd] bg-[linear-gradient(180deg,#fffdf8_0%,#fff5e7_100%)] p-4 shadow-[0_10px_26px_rgba(96,70,50,0.05)]">
+                      <div className="absolute right-3 top-3">
+                        <CompassIcon className="h-11 w-11 drop-shadow-[0_8px_20px_rgba(91,72,56,0.08)]" />
+                      </div>
+                      <div className="pr-16">
+                        <div className="text-[0.92rem] font-black tracking-[-0.03em] text-[var(--text)]">
+                          求生建议
+                        </div>
+                        <p className="mt-2 max-w-[22ch] text-[0.92rem] leading-[1.58] text-[var(--text)] sm:max-w-[24ch]">
+                          {result.advice}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </SectionCard>
+                </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2 pt-1">
                   <button
                     type="button"
                     onClick={replay}
-                    className="w-full rounded-[22px] bg-[linear-gradient(135deg,var(--accent),#ef8d57)] px-5 py-4 text-[17px] font-semibold text-white shadow-bubble transition hover:translate-y-[-1px] active:scale-[0.99]"
+                    className="w-full rounded-[24px] bg-[linear-gradient(135deg,#ef7e57,#ea6948)] px-5 py-4 text-[16px] font-semibold text-white shadow-[0_18px_30px_rgba(231,119,79,0.24)] transition hover:translate-y-[-1px] active:scale-[0.99]"
                   >
                     再玩一次
                   </button>
                   <button
                     type="button"
                     onClick={shareResult}
-                    className="w-full rounded-[22px] border border-[rgba(89,70,55,0.12)] bg-white/78 px-5 py-4 text-[15px] font-semibold text-[var(--text)] transition hover:bg-white"
+                    className="w-full rounded-[24px] border border-[rgba(89,70,55,0.12)] bg-white/88 px-5 py-4 text-[15px] font-semibold text-[var(--text)] transition hover:bg-white"
                   >
                     分享结果
                   </button>
+                  <div className="pt-0.5 text-center text-[12px] text-[#ba9578]">
+                    换个剧本，看看新结局 ~
+                  </div>
                 </div>
 
                 {shareStatus ? (
